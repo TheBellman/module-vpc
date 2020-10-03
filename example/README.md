@@ -43,6 +43,7 @@ After creating `terraform.tfvars` you will need to update `backend.tf` - see the
 Finally, you can apply the example code:
 
 ```
+cd example
 terraform init
 terraform apply
 ```
