@@ -4,9 +4,10 @@
 2. verify https/s to instance in private network works [done]
 3. verify http/s out of private network works [done]
 4. instance connect / session manager to instances [done]
-6. push module to github
+6. push module to github [done]
 7. test frameork using module pulled from github
 8. document, including diagram similar to https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html
+9. readme in the example code
 
 
 

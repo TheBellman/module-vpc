@@ -1,0 +1,7 @@
+aws_region     = "eu-west-2"
+aws_profile    = "????"
+aws_account_id = "????"
+tags           = { Owner = "???", Project = "VPC Module Test" }
+vpc_cidr       = "172.21.0.0/16"
+vpc_name       = "test"
+ssh_inbound    = ["????"..., "18.202.216.48/29", "3.8.37.24/29", "35.180.112.80/29"]
