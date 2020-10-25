@@ -3,6 +3,8 @@
 **/*.pem
 **/*key
 
+**/*.graffle
+
 # Local .terraform directories
 **/.terraform/*
 **/terraform.tfvars
