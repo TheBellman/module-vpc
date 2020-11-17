@@ -47,3 +47,8 @@ output private_sg {
   description = "ID of the Private security group"
   value       = aws_security_group.private.id
 }
+
+output public_nacl_id {
+  description = "ID of the NACL attached to the public subnets"
+  value = aws_network_acl.public.id
+}
