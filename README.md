@@ -22,10 +22,10 @@ Note that this code also sets up sample Security Groups for private and public i
 ## Prerequisites
 This module does make use of Terraform version constraints (see `versions.tf`) but can be summarised as:
 
- - Terraform 0.13.4 or above
- - Terraform AWS provider 3.7.0 or above
+ - Terraform 1.3.6 or above
+ - Terraform AWS provider 4.48.0 or above
 
-The example code broadly assumes AWS CLI 2.0.54 or better is available.
+The example code broadly assumes AWS CLI 2.9.10 or better is available.
 
 ## Usage
 See the `example` directory for more detailed information, however this is intended to be very simple to use, for example:
