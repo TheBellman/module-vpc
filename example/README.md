@@ -4,8 +4,8 @@ This example uses the VPC module to stand up a VPC, then install a public and pr
 ## Prerequisites
 This module does make use of Terraform version constraints (see `versions.tf`) but can be summarised as:
 
- - Terraform 0.13.4 or above
- - Terraform AWS provider 3.7.0 or above
+ - Terraform 1.3.6 or above
+ - Terraform AWS provider 4.48.0 or above
 
 The example code broadly assumes AWS CLI 2.0.54 or better is available.
 
@@ -17,7 +17,6 @@ First, create `terraform.tfvars` using `terraform.tfvars.template` as an example
 aws_region     = "eu-west-2"
 aws_profile    = "adm_rhook_cli"
 aws_account_id = "889199313043"
-tags           = { Owner = "Robert", Client = "Little Dog Digital", Project = "VPC Module Test" }
 vpc_cidr       = "172.21.0.0/16"
 vpc_name       = "test"
 ssh_inbound    = ["89.35.68.27/32", "18.202.216.48/29", "3.8.37.24/29", "35.180.112.80/29"]
@@ -25,11 +24,10 @@ ssh_inbound    = ["89.35.68.27/32", "18.202.216.48/29", "3.8.37.24/29", "35.180.
 
 In this example we allow SSH from a particular client, plus some additional CIDR blocks from AWS. These additional blocks are needed to allow the use of [Instance Connect](https://aws.amazon.com/about-aws/whats-new/2019/06/introducing-amazon-ec2-instance-connect/) through the AWS console.
 
-These CIDR blocks are available from AWS:
+These CIDR blocks are available from AWS using a small tool I wrote (see https://github.com/TheBellman/cidrapi):
 
 ```
-wget https://ip-ranges.amazonaws.com/ip-ranges.json
-jq '.prefixes[] | select(.service=="EC2_INSTANCE_CONNECT")' < ip-ranges.json
+curl https://mqciw5p4x8.execute-api.eu-west-2.amazonaws.com/v1/cidr/eu-west-2/EC2
 ```
 
 Note that use of instance connect can be controlled through [IAM policies](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-set-up.html). The nice thing about Instance Connect is that we do not need to provision an SSH key onto the instance, and access via SSH from the desktop is managed purely through rights on the IAM principal:
@@ -78,7 +76,7 @@ As described above, you should be able to use Instance Connect to SSH to the "pu
 The joy of using Instance Connect / Session Manager is that direct access to the command line on instances is managed purely through IAM permissions, and is audited via Cloud Trail.
 
 ## License
-Copyright 2020 Little Dog Digital
+Copyright 2022 Little Dog Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

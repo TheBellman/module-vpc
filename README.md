@@ -49,7 +49,7 @@ module test_vpc {
 | ssh_inbound | a list of CIDR blocks which are permitted to SSH into public instances |
 
 ## License
-Copyright 2020 Little Dog Digital
+Copyright 2022 Little Dog Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

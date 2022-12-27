@@ -1,5 +1,5 @@
 terraform {
-  backend s3 {
+  backend "s3" {
     bucket         = "terraform-state20200913104433379400000001"
     key            = "module-vpc-test"
     region         = "eu-west-2"
