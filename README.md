@@ -48,6 +48,9 @@ module test_vpc {
 | vpc_name | a name for the VPC that is used as a prefix on asset names and tags |
 | ssh_inbound | a list of CIDR blocks which are permitted to SSH into public instances |
 
+### Tags
+A note on the tags you can provide - if your provider is configured to provide default tags (see the example), then the module will also "see" those tags. In other words, use this parameter for additional tags.
+
 ## License
 Copyright 2022 Little Dog Digital
 

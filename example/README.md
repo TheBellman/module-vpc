@@ -30,12 +30,6 @@ These CIDR blocks are available from AWS using a small tool I wrote (see https:/
 curl https://mqciw5p4x8.execute-api.eu-west-2.amazonaws.com/v1/cidr/eu-west-2/EC2
 ```
 
-Note that use of instance connect can be controlled through [IAM policies](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-set-up.html). The nice thing about Instance Connect is that we do not need to provision an SSH key onto the instance, and access via SSH from the desktop is managed purely through rights on the IAM principal:
-
-```
-mssh -u adm_rhook_cli  i-0b619e1685a0d4742
-```
-
 After creating `terraform.tfvars` you will need to update `backend.tf` - see the [Terraform Documentation](https://www.terraform.io/docs/backends/index.html) for more information - you can even remove `backend.tf` competely to keep the Terraform state locally.
 
 Finally, you can apply the example code:
@@ -70,13 +64,39 @@ vpc_arn = arn:aws:ec2:eu-west-2:889199313043:vpc/vpc-026dcbaa33a863014
 vpc_id = vpc-026dcbaa33a863014
 ```
 
+Note that use of instance connect can be controlled through [IAM policies](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-set-up.html). The nice thing about Instance Connect is that we do not need to provision an SSH key onto the instance, and access via SSH from the desktop is managed purely through rights on the IAM principal:
+
+```
+mssh -u adm_rhook_cli  i-0b619e1685a0d4742
+```
+
+It's possible to trivially run a simple HTTP server on our private instance - first connect to it via Session Manager in the console and execute:
+```
+sudo python -m SimpleHTTPServer 80
+```
+
+Then from the public server, you can do a curl:
+```
+$ curl 172.21.106.207:80
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"><html>
+<title>Directory listing for /</title>
+<body>
+<h2>Directory listing for /</h2>
+<hr>
+<ul>
+<li><a href="%5B">[</a>
+<li><a href="a2p">a2p</a>
+<li><a href="ac">ac</a>
+.
+.
+.
+```
+
 ### Access
 As described above, you should be able to use Instance Connect to SSH to the "public" instance, however you will need to use [Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html) via the AWS console to connect directly to the "private" instance.
 
 The joy of using Instance Connect / Session Manager is that direct access to the command line on instances is managed purely through IAM permissions, and is audited via Cloud Trail.
 
-
-sudo python -m SimpleHTTPServer 80
 
 ## License
 Copyright 2022 Little Dog Digital

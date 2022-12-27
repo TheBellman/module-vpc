@@ -109,7 +109,7 @@ resource "aws_network_acl_rule" "private_http_in" {
   egress         = false
   protocol       = "tcp"
   rule_action    = "allow"
-  cidr_block     = element(aws_subnet.private.*.cidr_block, count.index)
+  cidr_block     = element(aws_subnet.public.*.cidr_block, count.index)
   from_port      = 80
   to_port        = 80
 }
@@ -121,7 +121,7 @@ resource "aws_network_acl_rule" "private_https_in" {
   egress         = false
   protocol       = "tcp"
   rule_action    = "allow"
-  cidr_block     = element(aws_subnet.private.*.cidr_block, count.index)
+  cidr_block     = element(aws_subnet.public.*.cidr_block, count.index)
   from_port      = 443
   to_port        = 443
 }
@@ -166,7 +166,7 @@ resource "aws_network_acl_rule" "private_ephemeral_out" {
   egress         = true
   protocol       = "tcp"
   rule_action    = "allow"
-  cidr_block     = element(aws_subnet.private.*.cidr_block, count.index)
+  cidr_block     = element(aws_subnet.public.*.cidr_block, count.index)
   from_port      = 1024
   to_port        = 65535
 }
