@@ -29,13 +29,13 @@ output "private_subnet_id" {
 }
 
 output "eip_public_address" {
-  description = "NAT Gateway public address"
-  value       = aws_eip.public.public_ip
+  description = "Internet Gateway public address"
+  value       = aws_eip.igw_ip.public_ip
 }
 
 output "eip_private_address" {
-  description = "NAT Gateway private address"
-  value       = aws_eip.public.private_ip
+  description = "Internet Gateway private address"
+  value       = aws_eip.igw_ip.private_ip
 }
 
 output "public_sg" {

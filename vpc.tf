@@ -1,5 +1,3 @@
-
-
 # --------------------------------------------------------------------------------
 # VPC wide assets
 # --------------------------------------------------------------------------------
@@ -10,12 +8,25 @@ resource "aws_vpc" "main" {
   tags                 = merge({ "Name" = var.vpc_name }, var.tags)
 }
 
-# Define internet gateway
+# --------------------------------------------------------------------------------
+# internet gateway
+# --------------------------------------------------------------------------------
+
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
   tags   = merge({ "Name" = var.vpc_name }, var.tags)
 }
 
+# TODO fix this name - should be IGW IP
+resource "aws_eip" "igw_ip" {
+  vpc        = true
+  tags       = merge({ "Name" = "${var.vpc_name} Public" }, var.tags)
+  depends_on = [aws_internet_gateway.main]
+}
+
+# --------------------------------------------------------------------------------
+# lookup to find AZ
+# --------------------------------------------------------------------------------
 data "aws_availability_zones" "available" {
   state = "available"
   filter {

@@ -26,9 +26,9 @@ variable "ssh_inbound" {
 }
 
 variable "tags" {
-	type = map(string)
+  type = map(string)
 }
 
 locals {
-	ami = "amzn2-ami-kernel-5.10-hvm-2.0.20221210.1-x86_64-gp2"
+  ami = "amzn2-ami-kernel-5.10-hvm-2.0.20221210.1-x86_64-gp2"
 }

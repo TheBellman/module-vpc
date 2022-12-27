@@ -1,7 +1,7 @@
 # module-vpc
 
 This is an opinionated but very bare bones Terraform module to create a VPC which is based on the
-sample architecture defined at https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html
+sample architecture defined at https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html
 
 Specifically, what is built is roughly as below
 

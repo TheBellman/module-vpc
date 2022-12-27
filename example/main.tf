@@ -24,11 +24,13 @@ data "aws_ami" "test" {
   }
 }
 
+# TODO - these will probably fail to start because routing isn't necessarily working yet
 resource "aws_instance" "public" {
-  ami                    = data.aws_ami.test.id
-  instance_type          = "t2.micro"
-  subnet_id              = module.vpc.public_subnet_id[0]
-  vpc_security_group_ids = [module.vpc.public_sg]
+  ami                         = data.aws_ami.test.id
+  instance_type               = "t2.micro"
+  subnet_id                   = module.vpc.public_subnet_id[0]
+  vpc_security_group_ids      = [module.vpc.public_sg]
+  associate_public_ip_address = true
 
   disable_api_termination              = false
   instance_initiated_shutdown_behavior = "terminate"

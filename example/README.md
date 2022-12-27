@@ -7,7 +7,7 @@ This module does make use of Terraform version constraints (see `versions.tf`) b
  - Terraform 1.3.6 or above
  - Terraform AWS provider 4.48.0 or above
 
-The example code broadly assumes AWS CLI 2.0.54 or better is available.
+The example code broadly assumes AWS CLI 2.9.10 or better is available.
 
 ## Usage
 
@@ -74,6 +74,9 @@ vpc_id = vpc-026dcbaa33a863014
 As described above, you should be able to use Instance Connect to SSH to the "public" instance, however you will need to use [Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html) via the AWS console to connect directly to the "private" instance.
 
 The joy of using Instance Connect / Session Manager is that direct access to the command line on instances is managed purely through IAM permissions, and is audited via Cloud Trail.
+
+
+sudo python -m SimpleHTTPServer 80
 
 ## License
 Copyright 2022 Little Dog Digital
