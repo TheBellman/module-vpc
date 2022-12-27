@@ -1,58 +1,9 @@
 # --------------------------------------------------------------------------------
-# terraform runtime definitions
-# --------------------------------------------------------------------------------
-terraform {
-  required_version = ">= 0.13.2"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 3.7.0"
-    }
-  }
-}
-
-provider aws {
-  version = ">= 3.7.0"
-  region  = var.aws_region
-  profile = var.aws_profile
-}
-
-# --------------------------------------------------------------------------------
-# variables to inject from terraform.tfvars or commandline
-# --------------------------------------------------------------------------------
-variable aws_region {
-  type = string
-}
-
-variable aws_account_id {
-  type = string
-}
-
-variable aws_profile {
-  type = string
-}
-
-variable tags {
-  type = map(string)
-}
-
-variable vpc_cidr {
-  type = string
-}
-
-variable vpc_name {
-  type = string
-}
-
-variable ssh_inbound {
-  type = list(string)
-}
-# --------------------------------------------------------------------------------
 # create a VPC
 # --------------------------------------------------------------------------------
-module vpc {
-  source = "github.com/TheBellman/module-vpc"
-
+module "vpc" {
+  /*source = "github.com/TheBellman/module-vpc"*/
+  source = "../../module-vpc"
   tags   = var.tags
 
   vpc_cidr    = var.vpc_cidr
@@ -63,21 +14,24 @@ module vpc {
 # --------------------------------------------------------------------------------
 # create an instance in a 'public' subnet
 # --------------------------------------------------------------------------------
-data aws_ami test {
+data "aws_ami" "test" {
   most_recent = true
   owners      = ["amazon"]
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-2.0.20200917.0-x86_64-gp2"]
+    values = [local.ami]
   }
 }
 
-resource aws_instance public {
-  ami                    = data.aws_ami.test.id
-  instance_type          = "t2.micro"
-  subnet_id              = module.vpc.public_subnet_id[0]
-  vpc_security_group_ids = [module.vpc.public_sg]
+# TODO - these will probably fail to start because routing isn't necessarily working yet
+resource "aws_instance" "public" {
+  ami                         = data.aws_ami.test.id
+  instance_type               = "t2.micro"
+  subnet_id                   = module.vpc.public_subnet_id[0]
+  vpc_security_group_ids      = [module.vpc.public_sg]
+  associate_public_ip_address = true
+  depends_on = [module.vpc]
 
   disable_api_termination              = false
   instance_initiated_shutdown_behavior = "terminate"
@@ -87,8 +41,8 @@ resource aws_instance public {
     volume_size = 8
   }
 
-  tags        = { Name = "Public Test", Owner = "Robert", Client = "Little Dog Digital", Project = "VPC Module Test" }
-  volume_tags = { Name = "Public Test", Owner = "Robert", Client = "Little Dog Digital", Project = "VPC Module Test" }
+  tags        = { Name = "Public Test" }
+  volume_tags = { Name = "Public Test" }
 
   user_data = <<EOF
 #!/bin/bash
@@ -96,11 +50,12 @@ yum update -y -q
 EOF
 }
 
-resource aws_instance private {
+resource "aws_instance" "private" {
   ami                    = data.aws_ami.test.id
   instance_type          = "t2.micro"
   subnet_id              = module.vpc.private_subnet_id[0]
   vpc_security_group_ids = [module.vpc.private_sg]
+  depends_on = [module.vpc]
 
   iam_instance_profile                 = aws_iam_instance_profile.ssm.name
   disable_api_termination              = false
@@ -111,8 +66,8 @@ resource aws_instance private {
     volume_size = 8
   }
 
-  tags        = { Name = "Private Test", Owner = "Robert", Client = "Little Dog Digital", Project = "VPC Module Test" }
-  volume_tags = { Name = "Private Test", Owner = "Robert", Client = "Little Dog Digital", Project = "VPC Module Test" }
+  tags        = { Name = "Private Test" }
+  volume_tags = { Name = "Private Test" }
 
   user_data = <<EOF
 #!/bin/bash
@@ -123,7 +78,7 @@ EOF
 # --------------------------------------------------------------------------------
 # SSM Role for the private instance
 # --------------------------------------------------------------------------------
-resource aws_iam_role ssm {
+resource "aws_iam_role" "ssm" {
   name               = "${var.vpc_name}-ssm"
   description        = "Role to be assumed by instances to allow access via SSM"
   assume_role_policy = <<EOF
@@ -145,42 +100,12 @@ resource aws_iam_role ssm {
 EOF
 }
 
-resource aws_iam_role_policy_attachment ssm {
+resource "aws_iam_role_policy_attachment" "ssm" {
   role       = aws_iam_role.ssm.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource aws_iam_instance_profile ssm {
+resource "aws_iam_instance_profile" "ssm" {
   name = "${var.vpc_name}-private"
   role = aws_iam_role.ssm.name
-}
-# --------------------------------------------------------------------------------
-# report some interesting facts
-# --------------------------------------------------------------------------------
-output vpc_id {
-  value = module.vpc.vpc_id
-}
-
-output vpc_arn {
-  value = module.vpc.vpc_arn
-}
-
-output public_subnet {
-  value = module.vpc.public_subnet
-}
-
-output private_subnet {
-  value = module.vpc.private_subnet
-}
-
-output eip_public_address {
-  value = module.vpc.eip_public_address
-}
-
-output public_instance {
-  value = aws_instance.public.public_ip
-}
-
-output private_instance {
-  value = aws_instance.private.private_ip
 }

@@ -1,7 +1,7 @@
 # module-vpc
 
 This is an opinionated but very bare bones Terraform module to create a VPC which is based on the
-sample architecture defined at https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html
+sample architecture defined at https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html
 
 Specifically, what is built is roughly as below
 
@@ -48,8 +48,11 @@ module test_vpc {
 | vpc_name | a name for the VPC that is used as a prefix on asset names and tags |
 | ssh_inbound | a list of CIDR blocks which are permitted to SSH into public instances |
 
+### Tags
+A note on the tags you can provide - if your provider is configured to provide default tags (see the example), then the module will also "see" those tags. In other words, use this parameter for additional tags.
+
 ## License
-Copyright 2020 Little Dog Digital
+Copyright 2022 Little Dog Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
