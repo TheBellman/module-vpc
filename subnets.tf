@@ -66,5 +66,5 @@ resource "aws_route_table" "private" {
 resource "aws_main_route_table_association" "main" {
   vpc_id         = aws_vpc.main.id
   route_table_id = aws_route_table.private.id
-    depends_on = [aws_nat_gateway.public, aws_internet_gateway.main]
+  depends_on     = [aws_nat_gateway.public, aws_internet_gateway.main]
 }
