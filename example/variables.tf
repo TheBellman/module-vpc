@@ -29,6 +29,11 @@ variable "tags" {
   type = map(string)
 }
 
+# Amazon Linux 2023 AMI 2023.0.20230503.0 x86_64 HVM kernel-6.1
+#    al2023-ami-2023.0.20230503.0-kernel-6.1-x86_64
+# Amazon Linux 2023 AMI 2023.0.20230503.0 arm64 HVM kernel-6.1
+#    al2023-ami-2023.0.20230503.0-kernel-6.1-arm64
 locals {
-  ami = "amzn2-ami-kernel-5.10-hvm-2.0.20221210.1-x86_64-gp2"
+  ami = "al2023-ami-2023.0.20230503.0-kernel-6.1-arm64"
 }
+
