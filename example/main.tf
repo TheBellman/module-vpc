@@ -26,7 +26,7 @@ data "aws_ami" "test" {
 # TODO - these will probably fail to start because routing isn't necessarily working yet
 resource "aws_instance" "public" {
   ami                         = data.aws_ami.test.id
-  instance_type               = "t2.micro"
+  instance_type               = "t4g.nano"
   subnet_id                   = module.vpc.public_subnet_id[0]
   vpc_security_group_ids      = [module.vpc.public_sg]
   associate_public_ip_address = true
@@ -45,13 +45,14 @@ resource "aws_instance" "public" {
 
   user_data = <<EOF
 #!/bin/bash
-yum update -y -q
+dnf update -y -q
+dnf install postgresql15 -y -q
 EOF
 }
 
 resource "aws_instance" "private" {
   ami                    = data.aws_ami.test.id
-  instance_type          = "t2.micro"
+  instance_type          = "t4g.nano"
   subnet_id              = module.vpc.private_subnet_id[0]
   vpc_security_group_ids = [module.vpc.private_sg]
   depends_on             = [module.vpc]
@@ -70,7 +71,7 @@ resource "aws_instance" "private" {
 
   user_data = <<EOF
 #!/bin/bash
-yum update -y -q
+dnf update -y -q
 EOF
 }
 
