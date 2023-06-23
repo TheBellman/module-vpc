@@ -52,3 +52,12 @@ output "public_nacl_id" {
   description = "ID of the NACL attached to the public subnets"
   value       = aws_network_acl.public.id
 }
+
+output "private_nacl_id" {
+  description = "ID of the NACL attached to the public private"
+  value       = aws_network_acl.private.id
+}
+
+output "public_route_table_id" {
+  value = aws_route_table.public.id
+}

@@ -11,22 +11,18 @@ resource "aws_subnet" "public" {
   tags                    = merge({ "Name" = "${var.vpc_name} Public" }, var.tags)
 }
 
-resource "aws_nat_gateway" "public" {
-  allocation_id = aws_eip.igw_ip.id
-  subnet_id     = aws_subnet.public[0].id
-  tags          = merge({ "Name" = "${var.vpc_name} Public" }, var.tags)
-}
-
 #
 # public instances route out through the internet gateway
 #
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.main.id
-  }
-  tags = merge({ "Name" = "${var.vpc_name} public" }, var.tags)
+  tags   = merge({ "Name" = "${var.vpc_name} public" }, var.tags)
+}
+
+resource "aws_route" "public" {
+  route_table_id         = aws_route_table.public.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.main.id
 }
 
 resource "aws_route_table_association" "public" {
@@ -55,13 +51,14 @@ resource "aws_subnet" "private" {
 # subnets are implicitly associated with the main route table, so the private subnets don't need to be explicitly associated
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.public.id
-  }
-  tags = merge({ "Name" = "${var.vpc_name} private" }, var.tags)
+  tags   = merge({ "Name" = "${var.vpc_name} private" }, var.tags)
 }
 
+resource "aws_route" "private" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.public.id
+}
 
 resource "aws_main_route_table_association" "main" {
   vpc_id         = aws_vpc.main.id

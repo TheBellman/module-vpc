@@ -82,15 +82,6 @@ resource "aws_security_group_rule" "private_https_in" {
   cidr_blocks       = aws_subnet.public.*.cidr_block
 }
 
-resource "aws_security_group_rule" "private_http_out" {
-  security_group_id = aws_security_group.private.id
-  type              = "egress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
-
 resource "aws_security_group_rule" "private_https_out" {
   security_group_id = aws_security_group.private.id
   type              = "egress"
