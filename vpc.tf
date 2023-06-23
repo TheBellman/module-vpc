@@ -18,7 +18,7 @@ resource "aws_internet_gateway" "main" {
 }
 
 resource "aws_eip" "igw_ip" {
-  vpc        = true
+  domain     = "vpc"
   tags       = merge({ "Name" = "${var.vpc_name} IGW IP" }, var.tags)
   depends_on = [aws_internet_gateway.main]
 }
