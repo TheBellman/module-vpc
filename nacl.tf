@@ -137,17 +137,6 @@ resource "aws_network_acl_rule" "private_ephemeral_in" {
   to_port        = 65535
 }
 
-resource "aws_network_acl_rule" "private_http_out" {
-  network_acl_id = aws_network_acl.private.id
-  rule_number    = 200
-  egress         = true
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = "0.0.0.0/0"
-  from_port      = 80
-  to_port        = 80
-}
-
 resource "aws_network_acl_rule" "private_https_out" {
   network_acl_id = aws_network_acl.private.id
   rule_number    = 300
@@ -157,6 +146,18 @@ resource "aws_network_acl_rule" "private_https_out" {
   cidr_block     = "0.0.0.0/0"
   from_port      = 443
   to_port        = 443
+}
+
+resource "aws_network_acl_rule" "private_ephemeral_out_private" {
+  count          = local.subnet_count
+  network_acl_id = aws_network_acl.private.id
+  rule_number    = 330 + count.index
+  egress         = true
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = element(aws_subnet.private.*.cidr_block, count.index)
+  from_port      = 1024
+  to_port        = 65535
 }
 
 resource "aws_network_acl_rule" "private_ephemeral_out" {

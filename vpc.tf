@@ -17,11 +17,20 @@ resource "aws_internet_gateway" "main" {
   tags   = merge({ "Name" = var.vpc_name }, var.tags)
 }
 
-# TODO fix this name - should be IGW IP
 resource "aws_eip" "igw_ip" {
   vpc        = true
-  tags       = merge({ "Name" = "${var.vpc_name} Public" }, var.tags)
+  tags       = merge({ "Name" = "${var.vpc_name} IGW IP" }, var.tags)
   depends_on = [aws_internet_gateway.main]
+}
+
+# --------------------------------------------------------------------------------
+# NAT
+# --------------------------------------------------------------------------------
+
+resource "aws_nat_gateway" "public" {
+  allocation_id = aws_eip.igw_ip.id
+  subnet_id     = aws_subnet.public[0].id
+  tags          = merge({ "Name" = "${var.vpc_name} Public" }, var.tags)
 }
 
 # --------------------------------------------------------------------------------
