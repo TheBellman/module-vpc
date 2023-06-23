@@ -2,7 +2,7 @@
 # create a VPC
 # --------------------------------------------------------------------------------
 module "vpc" {
-  source = "github.com/TheBellman/module-vpc"
+  source = "github.com/TheBellman/module-vpc?ref=1.0"
   tags   = var.tags
 
   vpc_cidr    = var.vpc_cidr
